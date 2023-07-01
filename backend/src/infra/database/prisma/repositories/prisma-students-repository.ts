@@ -3,13 +3,11 @@ import { StudentsRepository } from "@application/repositories/students-repositor
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaStudentMapper } from "../mappers/prisma-student-mapper";
-import { CourseRepository } from "@application/repositories/course-repository";
 
 @Injectable()
 export class PrismaStudentsRepository implements StudentsRepository {
     constructor(
-        private prisma: PrismaService,
-        private courseRepository: CourseRepository
+        private prisma: PrismaService
     ) {}
     
     async create(student: Student): Promise<void> {
@@ -27,15 +25,24 @@ export class PrismaStudentsRepository implements StudentsRepository {
             }
         });
 
-        const course = await this.courseRepository.findById(student.cursoId);
+        if(!student) {
+            return null;
+        }
+
+        const course = await this.prisma.curso.findUnique({
+            include: {
+                unidade: true
+            },
+            where: {
+                idCurso: student.cursoId
+            }
+        });
 
         if(!course) {
             return null;
         }
 
-        if(!student) {
-            return null;
-        }
+        return PrismaStudentMapper.toDomain(student, course);
     }
     
 }

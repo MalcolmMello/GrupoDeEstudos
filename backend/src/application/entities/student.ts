@@ -71,12 +71,12 @@ export class Student {
         return this.props.semester;
     }
 
-    public set course(course: Course) {
-        this.course = course;
+    public set setourse(course: Course) {
+        this.props.course = course;
     }
 
     public get course(): Course {
-        return this.course;
+        return this.props.course;
     }
 
     private validateSemester(semestre: number): boolean {

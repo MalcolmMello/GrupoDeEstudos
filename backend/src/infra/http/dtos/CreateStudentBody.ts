@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsStrongPassword, IsUUID, Max, Min } from "class-validator"
+import { IS_NUMBER, IsNotEmpty, IsStrongPassword, IsUUID, Max, Min } from "class-validator"
 
 export class CreateStudentBody {
     @IsNotEmpty()
