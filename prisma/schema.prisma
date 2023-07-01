@@ -1,0 +1,66 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Unidade {
+  idUnidade String  @id
+  nome      String  @db.VarChar(100)
+  cursos    Curso[]
+}
+
+model Curso {
+  idCurso   String  @id
+  nome      String  @unique
+  unidadeId String
+  unidade   Unidade @relation(fields: [unidadeId], references: [idUnidade])
+  alunos    Aluno[]
+}
+
+model Aluno {
+  idAluno     String             @id
+  nome        String             @db.VarChar(100)
+  email       String             @unique @db.VarChar(150)
+  senha       String             @db.VarChar(100)
+  semestre    Int
+  cursoId     String
+  curso       Curso              @relation(fields: [cursoId], references: [idCurso])
+  organizador Organizador?
+  reunioes    AlunosOnReunioes[]
+}
+
+model Organizador {
+  idOrganizador String    @id
+  alunoId       String    @unique
+  aluno         Aluno     @relation(fields: [alunoId], references: [idAluno])
+  reunioes      Reuniao[]
+}
+
+model Reuniao {
+  idReuniao     String             @id
+  materia       String             @db.VarChar(100)
+  descricao     String             @db.VarChar(350)
+  local         String             @db.VarChar(200)
+  num_pessoas   Int
+  data_hora     DateTime
+  organizadorId String
+  organizador   Organizador        @relation(fields: [organizadorId], references: [idOrganizador])
+  alunos        AlunosOnReunioes[]
+  createdAt     DateTime           @default(now())
+}
+
+model AlunosOnReunioes {
+  alunoId   String
+  reuniaoId String
+  aluno     Aluno   @relation(fields: [alunoId], references: [idAluno])
+  reuniao   Reuniao @relation(fields: [reuniaoId], references: [idReuniao])
+
+  @@id([alunoId, reuniaoId])
+}
