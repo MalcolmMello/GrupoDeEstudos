@@ -1,7 +1,7 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
 const ButtonCancel = () => {
-  function onSubmit(){
+  function onSubmit() {
     window.alert("Você Desmarcou")
   }
 

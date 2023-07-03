@@ -1,26 +1,31 @@
 import { useEffect, useState } from "react";
 import Filter from "../components/Filter";
 import Header from "../components/Header";
-import { MeetItem } from "../components/MeetItem";
+import { MeetItem } from "../components/MeetItem/MeetItem";
 import SearchButton from "../components/SearchButton";
 import { IMeet } from "../types/Meet";
 import { useApi } from "../utils/MeetApi";
 import Pagination from "./Pagination";
+import MeetItemSkeleton from "../components/MeetItem/MeetItemSkeleton";
 
 const ITEMS_PER_PAGE = 6;
 
 const scheduledMeetings = () => {
+  const [loading, setLoading] = useState(false);
   const [meets, setMeets] = useState<IMeet[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     const fetchMeets = async () => {
       try {
+        setLoading(true);
         const api = useApi();
         const fetchedMeets = await api.getAllMeets();
         setMeets(fetchedMeets);
       } catch (error) {
         console.error('Erro api:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -50,6 +55,7 @@ const scheduledMeetings = () => {
         </div>
       </div>
       <main className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 px-6 sm:p-0 gap-12 mt-16 place-content-around sm:w-3/4 mx-auto">
+        {loading && Array.from({ length: 6 }).map((_, index) => <MeetItemSkeleton key={index} />)}
         {paginatedMeets.map((meet, index) => (
           <MeetItem key={index} {...meet} marcado={true} />
         ))}

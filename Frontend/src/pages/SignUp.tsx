@@ -29,6 +29,7 @@ const schema = z.object({
 });
 
 const SignUp = () => {
+    const [loading, setLoading] = useState(false);
     const [output, setOutput] = useState('');
     const {
         register,
@@ -45,7 +46,9 @@ const SignUp = () => {
     return (
         <form className="py-24 m-auto" onSubmit={handleSubmit(createUser)}>
             <div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
-                <div className="hidden lg:block lg:w-1/2 bg-cover"></div>
+                <div className="hidden lg:block lg:w-1/2 bg-cover">
+                    <img src="../../src/assets/imgSignup.jpeg" alt="teste" className="w-full h-full" />
+                </div>
                 <div className="w-full p-8 lg:w-1/2">
                     <h2 className="text-2xl font-semibold text-gray-700 text-center">StudyHub</h2>
 
@@ -93,7 +96,7 @@ const SignUp = () => {
                         </div>
                     </div>
                     <div className="mt-8">
-                        <button className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600">Criar conta</button>
+                        <button className="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600" disabled={loading}>Criar conta</button>
                     </div>
                     <div className="mt-6 flex items-center justify-between">
                         <span className="border-b w-1/5 md:w-1/4"></span>
