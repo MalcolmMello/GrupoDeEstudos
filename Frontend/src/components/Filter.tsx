@@ -10,7 +10,7 @@ const Filter = () => {
         className="flex items-center justify-between bg-white rounded-full w-36 px-4 py-2"
         aria-label="Filter"
       >
-        <Select.Value placeholder="Filtrar..." className='truncate'/>
+        <Select.Value placeholder="Filtrar..." className='truncate' />
         <Select.Icon className="text-violet11">
           <ChevronDownIcon />
         </Select.Icon>
@@ -22,17 +22,23 @@ const Filter = () => {
           </Select.ScrollUpButton>
           <Select.Viewport className="p-[5px]">
             <Select.Group>
-              <Select.Item value='Teste' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
-                <Select.ItemText className=''>Teste</Select.ItemText>
+              <Select.Item value='firstSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>1º Semestre</Select.ItemText>
               </Select.Item>
-              <Select.Item value='Teste2' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
-                <Select.ItemText className=''>Teste2</Select.ItemText>
+              <Select.Item value='secondSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>2º Semestre</Select.ItemText>
               </Select.Item>
-              <Select.Item value='Teste3' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
-                <Select.ItemText className=''>Teste3</Select.ItemText>
+              <Select.Item value='thirdSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>3º Semestre</Select.ItemText>
               </Select.Item>
-              <Select.Item value='Teste4' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
-                <Select.ItemText className=''>Teste4</Select.ItemText>
+              <Select.Item value='fourthSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>4º Semestre</Select.ItemText>
+              </Select.Item>
+              <Select.Item value='fifthSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>5º Semestre</Select.ItemText>
+              </Select.Item>
+              <Select.Item value='sixthSemester' className='hover:bg-gray-700 hover:text-white cursor-pointer hover:border-gray-700'>
+                <Select.ItemText className=''>6º Semestre</Select.ItemText>
               </Select.Item>
             </Select.Group>
           </Select.Viewport>

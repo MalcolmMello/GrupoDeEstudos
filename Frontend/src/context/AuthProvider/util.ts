@@ -2,13 +2,13 @@ import { api } from "../../lib/axios";
 import { IUser } from "./types";
 
 export function setUserLocalStorage(user: IUser | null) {
-    localStorage.setItem('u', JSON.stringify(user));
+    localStorage.setItem('u', JSON.stringify(user?.token));
 }
 
 export function getUserLocalStorage() {
     const json = localStorage.getItem('u');
 
-    if(!json){
+    if (!json) {
         return null;
     }
 
@@ -17,12 +17,12 @@ export function getUserLocalStorage() {
     return user ?? null;
 }
 
-export async function LoginRequest (email: string, password: string) {
-    try{
-        const request = await api.post('login', {email, password});
+export async function LoginRequest(email: string, password: string) {
+    try {
+        const request = await api.post('login', { email, password });
 
         return request.data;
-    } catch(error){
+    } catch (error) {
         return null;
     }
 }

@@ -5,6 +5,6 @@ export interface IMeet {
   qtdPessoas: number,
   data: string,
   local: string,
-  descricao:string,
+  descricao: string,
   marcado: boolean
 }

@@ -1,7 +1,7 @@
 import { User } from "@phosphor-icons/react";
-import { IMeet } from "../types/Meet";
-import ButtonCancel from "./ButtonCancel";
-import ButtonConfirm from "./ButtonConfirm";
+import { IMeet } from "../../types/Meet";
+import ButtonCancel from "../ButtonCancel";
+import ButtonConfirm from "../ButtonConfirm";
 
 export function MeetItem(meet: IMeet) {
 
@@ -10,7 +10,7 @@ export function MeetItem(meet: IMeet) {
       <div className="grid grid-cols-4 items-center justify-between ">
         <div className="flex col-span-3 gap-4">
           <div className="bg-slate-200 rounded-xl w-11 h-11 grid place-content-center">
-            <User size={24} className="text-slate-700 "/>
+            <User size={24} className="text-slate-700 " />
           </div>
           <div className="flex flex-col">
             <span className='font-medium '>{meet.organizador}</span>

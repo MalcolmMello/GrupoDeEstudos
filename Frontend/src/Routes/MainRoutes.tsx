@@ -8,11 +8,11 @@ import MyMeetings from "../pages/MyMeetings"
 
 const MainRoutes = () => {
   return useRoutes([
-    {path:"/", element: <Home/>},
-    {path:"/schedulemeetings", element: <ScheduledMeetings/>},
-    {path:"/mymeetings", element: <ProtectedLayout><MyMeetings/></ProtectedLayout>},
-    {path:"/login", element: <Login/>},
-    {path:"/signup", element: <SignUp/>}
+    { path: "/", element: <Home /> },
+    { path: "/scheduledmeetings", element: <ScheduledMeetings /> },
+    { path: "/mymeetings", element: <MyMeetings /> },
+    { path: "/login", element: <Login /> },
+    { path: "/signup", element: <SignUp /> }
   ])
 }
 
