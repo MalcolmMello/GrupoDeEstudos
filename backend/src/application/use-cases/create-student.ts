@@ -1,3 +1,4 @@
+import { hash } from "bcrypt";
 import { CourseRepository } from "@application/repositories/course-repository";
 import { StudentsRepository } from "@application/repositories/students-repository";
 import { Injectable } from "@nestjs/common";
@@ -39,7 +40,9 @@ export class CreateStudent {
             throw new EmailAlreadyExists();
         }
 
-        const student = new Host({name, email, password, semester, course});
+        const passwordHash = await hash(password, 10);
+
+        const student = new Host({name, email, password: passwordHash, semester, course});
 
         await this.studentsRepository.create(student);
 

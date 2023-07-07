@@ -1,3 +1,4 @@
+import { compare } from "bcrypt";
 import { Injectable } from "@nestjs/common";
 import { StudentsRepository } from "@application/repositories/students-repository";
 
@@ -8,7 +9,9 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.studentsRepository.findByEmail(username);
 
-    if(user && user.password === password) {
+    const isPasswordCorrect = await compare(password, user.password);
+
+    if(user && isPasswordCorrect) {
       return user;
     }
 
