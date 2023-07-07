@@ -1,9 +1,9 @@
-import { Student } from "@application/entities/student";
 import { CourseRepository } from "@application/repositories/course-repository";
 import { StudentsRepository } from "@application/repositories/students-repository";
 import { Injectable } from "@nestjs/common";
 import { CourseNotFound } from "./errors/course-not-found";
 import { EmailAlreadyExists } from "./errors/email-already-exists";
+import { Host } from "@application/entities/host";
 
 interface CreateStudentRequest {
     name: string,
@@ -14,7 +14,7 @@ interface CreateStudentRequest {
 }
 
 interface CreateStudentResponse {
-    student: Student
+    student: Host
 }
 
 @Injectable()
@@ -39,7 +39,7 @@ export class CreateStudent {
             throw new EmailAlreadyExists();
         }
 
-        const student = new Student({name, email, password, semester, course});
+        const student = new Host({name, email, password, semester, course});
 
         await this.studentsRepository.create(student);
 

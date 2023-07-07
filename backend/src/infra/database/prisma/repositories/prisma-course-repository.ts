@@ -7,6 +7,9 @@ import { PrismaCourseMapper } from "../mappers/prisma-course-mapper";
 @Injectable()
 export class PrismaCourseRepository implements CourseRepository {
     constructor(private prisma: PrismaService) {}
+    async create(course: Course): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
     
     async findById(id: string): Promise<Course | null> {
         const course = await this.prisma.curso.findUnique({

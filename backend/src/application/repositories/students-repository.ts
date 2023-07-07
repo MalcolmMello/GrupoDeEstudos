@@ -1,6 +1,7 @@
-import { Student } from "@application/entities/student";
+import { Host } from "@application/entities/host";
 
 export abstract class StudentsRepository {
-    abstract create(student: Student): Promise<void>;
-    abstract findByEmail(email: string): Promise<Student | null>
+    abstract create(student: Host): Promise<void>;
+    abstract findByEmail(email: string): Promise<Host | null>
+    abstract findById(id: string): Promise<Host | null>;
 }

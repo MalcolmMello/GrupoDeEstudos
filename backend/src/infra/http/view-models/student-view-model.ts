@@ -1,13 +1,14 @@
-import { Student } from "@application/entities/student";
+import { Host } from "@application/entities/host";
 
 export class StudentViewModel {
-    static toHTTP(student: Student) {
+    static toHTTP(student: Host) {
         return {
             id: student.id,
             name: student.name,
             email: student.email,
             semester: student.semester,
-            course: student.course.getname,
+            course: student.course,
+            idHost: student.idHost
         }
     }
 }
