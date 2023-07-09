@@ -87,5 +87,35 @@ export class PrismaStudentsRepository implements StudentsRepository {
 
         return PrismaStudentMapper.toDomain(student, course);
     }
+
+    async findByHostId(id: string): Promise<Host | null> {
+        const student = await this.prisma.organizador.findUnique({
+            where: {
+                idOrganizador: id
+            },
+            include: {
+                aluno: true
+            }
+        });
+
+        if(!student) {
+            return null;
+        }
+
+        const course = await this.prisma.curso.findUnique({
+            include: {
+                unidade: true
+            },
+            where: {
+                idCurso: student.aluno.cursoId
+            }
+        });
+
+        if(!course) {
+            return null;
+        }
+
+        return PrismaStudentMapper.toDomain({...student.aluno, organizador: student}, course);
+    }
     
 }

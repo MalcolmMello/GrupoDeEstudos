@@ -19,6 +19,14 @@ export class Meeting {
         this.props = props;
     }
 
+    public set id(id: string) {
+        this._id = id;
+    }
+
+    public get id(): string {
+        return this._id;
+    }
+
     public set subject(subject: string) {
         this.props.subject = subject;
     }
@@ -57,5 +65,13 @@ export class Meeting {
 
     public get dateHour(): Date {
         return this.props.date_hour;
+    }
+
+    public set host(host: Host) {
+        this.props.host = host;
+    }
+
+    public get host(): Host {
+        return this.props.host;
     }
 }

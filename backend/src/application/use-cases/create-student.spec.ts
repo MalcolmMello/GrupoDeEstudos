@@ -24,5 +24,5 @@ describe('Create student', () => {
         expect(studentsRepository.students[0]).toEqual(student);
 
 
-    })
-})
+    });
+});

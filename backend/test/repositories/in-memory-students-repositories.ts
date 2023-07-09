@@ -16,6 +16,12 @@ export class InMemoryStudentsRepository implements StudentsRepository {
         return student;
     }
 
+    async findByHostId(id: string): Promise<Host> {
+        const student = this.students.find((item) => item.idHost === id);
+
+        return student;
+    }
+
     async findById(id: string): Promise<Host> {
         const student = this.students.find((item) => item.id === id);
 

@@ -4,4 +4,5 @@ export abstract class StudentsRepository {
     abstract create(student: Host): Promise<void>;
     abstract findByEmail(email: string): Promise<Host | null>
     abstract findById(id: string): Promise<Host | null>;
+    abstract findByHostId(id: string): Promise<Host | null>;
 }
