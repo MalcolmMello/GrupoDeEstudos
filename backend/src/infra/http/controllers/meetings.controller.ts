@@ -3,7 +3,6 @@ import { CreateMeeting } from "@application/use-cases/create-meeting";
 import { CreateMeetingBody } from "../dtos/CreateMeetingBody";
 import { AuthenticatedGuard } from "@infra/auth/authenticated.guard";
 import { StudentViewModel } from "../view-models/student-view-model";
-import dayjs from "dayjs";
 import { MeetingViewModel } from "../view-models/meeting-view-model";
 
 @Controller('meetings')
