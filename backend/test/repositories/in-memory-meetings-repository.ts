@@ -12,8 +12,14 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
     throw new Error("Method not implemented.");
   }
 
-  async cancelMeeting(idMeeting: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async cancelMeeting(idMeeting: string): Promise<void | Error> {
+    const meeting = this.meetings.find((item) => item.id === idMeeting);
+
+    if(!meeting) {
+      throw new Error("Something went wrong.");
+    }
+    
+    meeting.status = "Cancelada";
   }
 
   async getMeetings(): Promise<Meeting[]> {

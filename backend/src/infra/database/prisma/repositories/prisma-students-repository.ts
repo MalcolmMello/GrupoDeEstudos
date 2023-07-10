@@ -31,7 +31,7 @@ export class PrismaStudentsRepository implements StudentsRepository {
     async findByEmail(email: string): Promise<Host | null> {
         const student = await this.prisma.aluno.findUnique({
             where: {
-                email: email
+                email: email,
             },
             include: {
                 organizador: true

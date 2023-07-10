@@ -1,5 +1,5 @@
 import { CreateStudent } from "@application/use-cases/create-student";
-import { Body, Controller, Get, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Request, UseGuards } from "@nestjs/common";
 import { CreateStudentBody } from "../dtos/CreateStudentBody";
 import { StudentViewModel } from "../view-models/student-view-model";
 import { LocalAuthGuard } from "@infra/auth/local-auth.guard";
@@ -17,15 +17,24 @@ export class StudentsController {
 
         const semesterToNumber = Number(semester);
 
-        const { student } = await this.createStudent.execute({
-            name,
-            email,
-            password,
-            semester: semesterToNumber,
-            idCourse
-        });
-
-        return { student: StudentViewModel.toHTTP(student) };
+        try {
+            const { student } = await this.createStudent.execute({
+                name,
+                email,
+                password,
+                semester: semesterToNumber,
+                idCourse
+            });
+    
+            return { student: StudentViewModel.toHTTP(student) };   
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.FORBIDDEN,
+                error: error.message,
+              }, HttpStatus.FORBIDDEN, {
+                cause: error
+              });
+        }
     }
 
     @UseGuards(LocalAuthGuard)

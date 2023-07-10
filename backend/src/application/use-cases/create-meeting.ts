@@ -39,6 +39,7 @@ export class CreateMeeting {
       place,
       num_persons,
       date_hour,
+      status: "Em aberto",
       host: student 
     });
 

@@ -9,6 +9,7 @@ export function makeMeeting() {
         description: "Vamos estudar javascript",
         place: "Parque",
         num_persons: 5,
+        status: "Em aberto",
         date_hour: date,
         host
     });

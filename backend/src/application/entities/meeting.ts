@@ -5,6 +5,7 @@ export interface MeetingProps {
     subject: string,
     description: string,
     place: string,
+    status: string,
     num_persons: number,
     date_hour: Date
     host: Host
@@ -57,6 +58,14 @@ export class Meeting {
 
     public get numPersons(): number {
         return this.props.num_persons;
+    }
+
+    public set status(status: string) {
+        this.props.status = status;
+    }
+
+    public get status(): string {
+        return this.props.status;
     }
 
     public set dateHour(date: Date) {

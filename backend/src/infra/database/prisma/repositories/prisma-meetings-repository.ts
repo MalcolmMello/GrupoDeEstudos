@@ -21,8 +21,27 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
     throw new Error("Method not implemented.");
   }
 
-  async cancelMeeting(idMeeting: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async cancelMeeting(idMeeting: string, idHost: string): Promise<void> {
+    const meetingExists = await this.prisma.reuniao.findFirst({
+      where: {
+        idReuniao: idMeeting,
+        organizadorId: idHost
+      }
+    });
+
+    if(!meetingExists) {
+      throw new Error("Something went wrong.");
+    }
+
+    await this.prisma.reuniao.update({
+      where: {
+        idReuniao: idMeeting,
+      },
+      data: {
+        status: "Cancelada"
+      }
+    });
+
   }
 
   async getMeetings(): Promise<Meeting[]> {
