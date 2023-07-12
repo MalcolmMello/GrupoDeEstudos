@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsNumber, IsUUID, MaxLength, MinLength } from "class-validator"
+import { IsDateString, IsNotEmpty, IsNumber, MaxLength, MinLength } from "class-validator"
 
 export class CreateMeetingBody {
   @IsNotEmpty()
@@ -21,6 +21,6 @@ export class CreateMeetingBody {
   num_persons: number
   
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   date_hour: string
 }

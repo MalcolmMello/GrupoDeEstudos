@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Request, Patch, NotFoundException } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Request, Patch, Get, NotFoundException, HttpException, HttpStatus } from "@nestjs/common";
 import { CreateMeeting } from "@application/use-cases/create-meeting";
 import { CreateMeetingBody } from "../dtos/CreateMeetingBody";
 import { AuthenticatedGuard } from "@infra/auth/authenticated.guard";
@@ -6,12 +6,14 @@ import { StudentViewModel } from "../view-models/student-view-model";
 import { MeetingViewModel } from "../view-models/meeting-view-model";
 import { CancelMeetingBody } from "../dtos/CancelMeetingBody";
 import { CancelMeeting } from "@application/use-cases/cancel-meeting";
+import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
 
 @Controller('meetings')
 export class MeetingsController {
   constructor(
     private createMeeting: CreateMeeting,
-    private cancelMeeting: CancelMeeting
+    private cancelMeeting: CancelMeeting,
+    private getOpenMeetings: GetOpenMeetings
   ){}
 
   @UseGuards(AuthenticatedGuard)
@@ -53,6 +55,23 @@ export class MeetingsController {
       return { message }
     } catch (error) {
       throw new NotFoundException();
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('open-meetings')
+  async openMeetings() {
+    try {
+      const { meetings } = await this.getOpenMeetings.execute();
+
+      return { meetings: meetings.map(MeetingViewModel.toHTTP) }
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.message,
+      }, HttpStatus.NOT_FOUND, {
+        cause: error
+      });
     }
   }
 }

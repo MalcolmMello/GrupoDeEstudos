@@ -45,7 +45,32 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
   }
 
   async getMeetings(): Promise<Meeting[]> {
-    throw new Error("Method not implemented.");
+    const meetings = await this.prisma.reuniao.findMany({
+      where: {
+        status: "Em aberto"
+      },
+      include: {
+        organizador:{
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+   
+    if(!meetings) {
+      throw new Error("No open meetings.");
+    }
+
+    return meetings.map(PrismaMeetingMapper.toDomain);
   }
 
   async confirmPresence(idStudent: string, idMeeting: string): Promise<void> {
