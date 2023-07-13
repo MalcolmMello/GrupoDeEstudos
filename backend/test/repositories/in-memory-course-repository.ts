@@ -13,5 +13,9 @@ export class InMemoryCourseRepository implements CourseRepository {
 
         return course;
     }
+
+    async getCourses(): Promise<Course[]> {
+        return this.courses;
+    }
     
 }

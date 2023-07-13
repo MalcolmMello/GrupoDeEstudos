@@ -7,13 +7,15 @@ import { MeetingViewModel } from "../view-models/meeting-view-model";
 import { CancelMeetingBody } from "../dtos/CancelMeetingBody";
 import { CancelMeeting } from "@application/use-cases/cancel-meeting";
 import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
+import { GetCourses } from "@application/use-cases/get-courses";
 
 @Controller('meetings')
 export class MeetingsController {
   constructor(
     private createMeeting: CreateMeeting,
     private cancelMeeting: CancelMeeting,
-    private getOpenMeetings: GetOpenMeetings
+    private getOpenMeetings: GetOpenMeetings,
+    private getCourses: GetCourses
   ){}
 
   @UseGuards(AuthenticatedGuard)

@@ -11,9 +11,9 @@ describe('Get open meetings', () => {
 
     await meetingsRepository.createMeeting(newMeeting);
 
-    const meetings = await getOpenMeetings.execute();
+    const { meetings } = await getOpenMeetings.execute();
 
     expect(meetingsRepository.meetings).toHaveLength(1);
-    expect(meetings.meetings).toHaveLength(1);
+    expect(meetings).toHaveLength(1);
   });
 })
