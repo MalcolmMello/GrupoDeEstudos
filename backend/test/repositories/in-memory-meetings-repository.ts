@@ -9,8 +9,18 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
     this.meetings.push(meeting);
   }
 
-  async updateMeeting(meeting: Meeting): Promise<Meeting> {
-    throw new Error("Method not implemented.");
+  async updateMeeting(meeting: Meeting): Promise<void> {
+    let meetingExists = this.meetings.find((item) => item.id === meeting.id);
+
+    if(!meetingExists) {
+      throw new Error("Something went wrong.");
+    }
+
+    for(let i = 0; i < this.meetings.length; i++) {
+      if(this.meetings[i].id === meetingExists.id) {
+        this.meetings[i] = meeting;
+      }
+    }
   }
 
   async cancelMeeting(idMeeting: string): Promise<void | Error> {

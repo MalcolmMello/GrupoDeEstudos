@@ -12,13 +12,31 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
   async createMeeting(meeting: Meeting): Promise<void> {
     const raw = PrismaMeetingMapper.toPrisma(meeting);
     
-    const newReuniao = await this.prisma.reuniao.create({
+    await this.prisma.reuniao.create({
       data: raw
     });
   }
 
-  async updateMeeting(meeting: Meeting): Promise<Meeting> {
-    throw new Error("Method not implemented.");
+  async updateMeeting(meeting: Meeting): Promise<void> {
+    const meetingExists = await this.prisma.reuniao.findFirst({
+      where: {
+        idReuniao: meeting.id,
+        organizadorId: meeting.host.idHost
+      }
+    });
+
+    if(!meetingExists) {
+      throw new Error("Something went wrong.");
+    }
+
+    const raw = PrismaMeetingMapper.toPrisma(meeting);
+
+    await this.prisma.reuniao.update({
+      where: {
+        idReuniao: meeting.id
+      },
+      data: raw
+    });
   }
 
   async cancelMeeting(idMeeting: string, idHost: string): Promise<void> {
