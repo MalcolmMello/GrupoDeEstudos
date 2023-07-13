@@ -1,4 +1,4 @@
-import { Aluno as RawAluno, Reuniao as RawReuniao, Unidade as RawUnidade } from "@prisma/client"
+import { AlunosOnReunioes, Aluno as RawAluno, Reuniao as RawReuniao, Unidade as RawUnidade } from "@prisma/client"
 import { Course } from "@application/entities/course";
 import { Host } from "@application/entities/host";
 import { Meeting } from "@application/entities/meeting";
@@ -8,7 +8,7 @@ interface RawAlunoInterface extends RawAluno {
   curso: {
     idCurso: string
     nome: string
-    unidade: RawUnidade
+    unidade: RawUnidade,
   }
 }
 
@@ -16,8 +16,9 @@ interface RawReuniaoWithJoins extends RawReuniao {
     organizador: {
       idOrganizador: string,
       alunoId: string,
-      aluno: RawAlunoInterface
-    }
+      aluno: RawAlunoInterface,
+    },
+    alunos?: AlunosOnReunioes[]
 }
 
 export class PrismaMeetingMapper {
@@ -33,7 +34,52 @@ export class PrismaMeetingMapper {
     }
   }
 
+  static toPrismaSearch(subject: string, description: string, semester?: number, date_hour?: Date) {
+    const orStatement: any = [
+      {
+        descricao: {
+          contains: description
+        }
+      },
+      {
+        materia: {
+          contains: subject
+        }
+      },
+    ];
+
+    if(semester) {
+      orStatement.push(
+        {
+          organizador: {
+            aluno: {
+              semestre: {
+                equals: semester
+              }
+            }
+          }
+        }
+      );
+    }
+
+    if(date_hour) {
+      orStatement.push(
+        {
+          data_hora: {
+            gte: date_hour
+          }
+        }
+      );
+    }
+    
+    return orStatement;
+  }
+
   static toDomain(meeting: RawReuniaoWithJoins) {
+    let studentsWhoConfirmedPresence: number;
+
+    meeting.alunos ? studentsWhoConfirmedPresence = meeting.alunos.length : studentsWhoConfirmedPresence = 0;
+    
     const unit = new Unit(meeting.organizador.aluno.curso.unidade.nome, meeting.organizador.aluno.curso.unidade.idUnidade);
     
     const course = new Course(meeting.organizador.aluno.curso.nome, unit, meeting.organizador.aluno.cursoId);
@@ -53,7 +99,7 @@ export class PrismaMeetingMapper {
       subject: meeting.materia,
       description: meeting.descricao,
       date_hour: meeting.data_hora,
-      num_persons: meeting.num_pessoas,
+      num_persons: meeting.num_pessoas + studentsWhoConfirmedPresence,
       place: meeting.local,
       status: meeting.status,
       host

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Request, Patch, Get, NotFoundException, HttpException, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards, Request, Patch, Get, NotFoundException, HttpException, HttpStatus, Query } from "@nestjs/common";
 import { CreateMeeting } from "@application/use-cases/create-meeting";
 import { CreateMeetingBody } from "../dtos/CreateMeetingBody";
 import { AuthenticatedGuard } from "@infra/auth/authenticated.guard";
@@ -7,7 +7,7 @@ import { MeetingViewModel } from "../view-models/meeting-view-model";
 import { CancelMeetingBody } from "../dtos/CancelMeetingBody";
 import { CancelMeeting } from "@application/use-cases/cancel-meeting";
 import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
-import { GetCourses } from "@application/use-cases/get-courses";
+import { SearchMeeting } from "@application/use-cases/search-meetings";
 
 @Controller('meetings')
 export class MeetingsController {
@@ -15,7 +15,7 @@ export class MeetingsController {
     private createMeeting: CreateMeeting,
     private cancelMeeting: CancelMeeting,
     private getOpenMeetings: GetOpenMeetings,
-    private getCourses: GetCourses
+    private searchMeetings: SearchMeeting
   ){}
 
   @UseGuards(AuthenticatedGuard)
@@ -61,11 +61,40 @@ export class MeetingsController {
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('open-meetings')
-  async openMeetings() {
+  @Get('open')
+  async open() {
     try {
       const { meetings } = await this.getOpenMeetings.execute();
 
+      return { meetings: meetings.map(MeetingViewModel.toHTTP) }
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.message,
+      }, HttpStatus.NOT_FOUND, {
+        cause: error
+      });
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('search')
+  async search(
+    @Query('subject') subject: string | undefined, 
+    @Query('description') description: string | undefined, 
+    @Query('date_hour') date_hour: string | undefined,
+    @Query('semester') semester: string | undefined
+  ) {
+    try {
+      let dateHourStringToDate: Date | undefined;
+      let semesterToNumber: number | undefined;
+
+      if(date_hour) { dateHourStringToDate = new Date(date_hour); }
+
+      if(semester) { semesterToNumber = Number(semester); }
+    
+      const { meetings } = await this.searchMeetings.execute({ subject, description, date_hour: dateHourStringToDate, semester: semesterToNumber });
+    
       return { meetings: meetings.map(MeetingViewModel.toHTTP) }
     } catch (error) {
       throw new HttpException({

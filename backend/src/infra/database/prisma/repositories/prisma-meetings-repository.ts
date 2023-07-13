@@ -62,7 +62,8 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
               }
             }
           }
-        }
+        },
+        alunos: true
       }
     });
    
@@ -87,5 +88,37 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
 
   async hostMeetings(): Promise<Meeting[]> {
     throw new Error("Method not implemented.");
+  }
+
+  async searchMeetings(subject: string, description: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
+    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour);
+    
+    const meetings = await this.prisma.reuniao.findMany({
+      where: {
+        OR: orStatement
+      },
+      include: {
+        organizador: {
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        },
+        alunos: true
+      },
+    });
+
+    if(!meetings) {
+      throw new Error("No meetings with the specified params.");
+    }
+
+    return meetings.map(PrismaMeetingMapper.toDomain);
   }
 }

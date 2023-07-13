@@ -8,6 +8,7 @@ import { CancelMeeting } from "@application/use-cases/cancel-meeting";
 import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
 import { CoursesController } from "./controllers/courses.controller";
 import { GetCourses } from "@application/use-cases/get-courses";
+import { SearchMeeting } from "@application/use-cases/search-meetings";
 
 @Module({
     imports: [DatabaseModule],
@@ -17,7 +18,8 @@ import { GetCourses } from "@application/use-cases/get-courses";
         CreateMeeting,
         CancelMeeting,
         GetOpenMeetings,
-        GetCourses
+        SearchMeeting,
+        GetCourses,
     ]
 })
 export class HttpModule{}
