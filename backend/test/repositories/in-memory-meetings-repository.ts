@@ -23,7 +23,9 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
   }
 
   async getMeetings(): Promise<Meeting[]> {
-    throw new Error("Method not implemented.");
+    const meetings = this.meetings.filter((item) => item.status === "Em aberto");
+
+    return meetings;
   }
 
   async confirmPresence(idStudent: string, idMeeting: string): Promise<void> {
