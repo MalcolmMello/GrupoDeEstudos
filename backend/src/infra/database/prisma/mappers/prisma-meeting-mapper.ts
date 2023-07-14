@@ -128,7 +128,10 @@ export class PrismaMeetingMapper {
       place: meeting.local,
       status: meeting.status,
       host,
-      students: students
-    }, meeting.idReuniao);
+      
+    }, 
+    meeting.idReuniao,
+    students
+    );
   }
 }

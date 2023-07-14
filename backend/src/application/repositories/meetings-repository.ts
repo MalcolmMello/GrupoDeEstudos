@@ -7,7 +7,7 @@ export abstract class MeetingsRepository {
   abstract getMeetings(): Promise<Meeting[]>;
   abstract confirmPresence(idStudent: string, idMeeting: string, idHost: string): Promise<void>;
   abstract cancelPresence(idStudent: string, idMeeting: string): Promise<void>;
-  abstract studentScheduledMeetings(idStudent: string): Promise<Meeting[]>;
+  abstract studentScheduledMeetings(idStudent: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]>;
   abstract hostMeetings(idHost: string): Promise<Meeting[]>;
   abstract searchMeetings(subject: string, description: string, semester: number, date_hour: Date): Promise<Meeting[]>
 }

@@ -10,16 +10,17 @@ export interface MeetingProps {
     num_persons: number,
     date_hour: Date
     host: Host,
-    students?: Host[]
 }
 
 export class Meeting {
     private _id
     private props: MeetingProps
+    private students?: Host[] = []
 
-    constructor(props: MeetingProps, id?: string) {
+    constructor(props: MeetingProps, id?: string, students?: Host[]) {
         this._id = id ?? randomUUID();
         this.props = props;
+        this.students = students
     }
 
     public set id(id: string) {
@@ -86,13 +87,13 @@ export class Meeting {
         return this.props.host;
     }
 
-    public set students(student: Host[]) {
+    public set setstudents(student: Host[]) {
         for(let i = 0; i < student.length; i++) {
-            this.props.students.push(student[i]);
+            this.students.push(student[i]);
         }
     }
 
-    public get students(): Host[] {
-        return this.props.students;
+    public get getstudents(): Host[] {
+        return this.students;
     }
 }

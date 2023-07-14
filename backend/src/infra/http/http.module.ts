@@ -11,6 +11,7 @@ import { GetCourses } from "@application/use-cases/get-courses";
 import { SearchMeeting } from "@application/use-cases/search-meetings";
 import { UpdateMeeting } from "@application/use-cases/update-meeting";
 import { ConfirmPresence } from "@application/use-cases/confirm-presence";
+import { ScheduledMeetings } from "@application/use-cases/scheduled-meetings";
 
 @Module({
     imports: [DatabaseModule],
@@ -23,6 +24,7 @@ import { ConfirmPresence } from "@application/use-cases/confirm-presence";
         SearchMeeting,
         UpdateMeeting,
         ConfirmPresence,
+        ScheduledMeetings,
         GetCourses
     ]
 })

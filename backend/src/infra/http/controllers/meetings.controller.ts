@@ -12,6 +12,7 @@ import { UpdateMeetingBody } from "../dtos/UpdateMeetingBody";
 import { UpdateMeeting } from "@application/use-cases/update-meeting";
 import { ConfirmPresence } from "@application/use-cases/confirm-presence";
 import { ConfirmPresenceBody } from "../dtos/ConfirmPresenceBody";
+import { ScheduledMeetings } from "@application/use-cases/scheduled-meetings";
 
 @Controller('meetings')
 export class MeetingsController {
@@ -21,7 +22,8 @@ export class MeetingsController {
     private getOpenMeetings: GetOpenMeetings,
     private searchMeetings: SearchMeeting,
     private updateMeeting: UpdateMeeting,
-    private confirmPresence: ConfirmPresence
+    private confirmPresence: ConfirmPresence,
+    private scheduledMeetings: ScheduledMeetings
   ){}
 
   @UseGuards(AuthenticatedGuard)
@@ -153,8 +155,6 @@ export class MeetingsController {
 
     const { id, idHost } = StudentViewModel.toHTTP(req.user);
 
-    console.log(id)
-
     try {
       const { message } = await this.confirmPresence.execute({idMeeting, idStudent: id, idHost});
 
@@ -166,6 +166,43 @@ export class MeetingsController {
         status: HttpStatus.PRECONDITION_FAILED,
         error: error.message,
       }, HttpStatus.PRECONDITION_FAILED, {
+        cause: error
+      });
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('scheduled')
+  async scheduled(
+    @Request() req,
+    @Query('subject') subject: string | undefined, 
+    @Query('description') description: string | undefined, 
+    @Query('date_hour') date_hour: string | undefined,
+    @Query('semester') semester: string | undefined
+  ) {
+    const { id } = StudentViewModel.toHTTP(req.user);
+    let dateHourStringToDate: Date | undefined;
+    let semesterToNumber: number | undefined;
+
+    if(date_hour) { dateHourStringToDate = new Date(date_hour); }
+
+    if(semester) { semesterToNumber = Number(semester); }
+
+    try {
+      const { meetings } = await this.scheduledMeetings.execute({ 
+        idStudent: id, 
+        subject, 
+        description, 
+        date_hour: dateHourStringToDate, 
+        semester: semesterToNumber 
+      });
+
+      return { meetings: meetings.map(MeetingViewModel.toHTTP) }
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.message,
+      }, HttpStatus.NOT_FOUND, {
         cause: error
       });
     }

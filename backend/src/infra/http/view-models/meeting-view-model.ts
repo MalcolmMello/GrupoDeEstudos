@@ -18,7 +18,7 @@ export class MeetingViewModel {
         course: meeting.host.course
       },
       _idHost: meeting.host.idHost,
-      students: meeting.students.map(StudentViewModel.toHTTP)
+      students: meeting.getstudents.map(StudentViewModel.toHTTP)
     }
   }
 }

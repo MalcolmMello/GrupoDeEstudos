@@ -145,15 +145,57 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
     throw new Error("Method not implemented.");
   }
 
-  async studentScheduledMeetings(idStudent: string): Promise<Meeting[]> {
-    throw new Error("Method not implemented.");
+  async studentScheduledMeetings(idStudent: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
+    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour);
+    const meetings = await this.prisma.reuniao.findMany({
+      where: {
+        OR: orStatement,
+        alunos: {
+          some: {alunoId: idStudent}
+        }
+      },
+      include: {
+        organizador:{
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        },
+        alunos: {
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if(!meetings) {
+      throw new Error("No meetings found.");
+    }
+
+    return meetings.map(PrismaMeetingMapper.toDomain);
   }
 
   async hostMeetings(): Promise<Meeting[]> {
     throw new Error("Method not implemented.");
   }
 
-  async searchMeetings(subject: string, description: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
+  async searchMeetings(subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
     const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour);
     
     const meetings = await this.prisma.reuniao.findMany({
