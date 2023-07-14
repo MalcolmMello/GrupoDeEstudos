@@ -1,4 +1,5 @@
 import { Meeting } from "@application/entities/meeting";
+import { StudentViewModel } from "./student-view-model";
 
 export class MeetingViewModel {
   static toHTTP(meeting: Meeting) {
@@ -16,7 +17,8 @@ export class MeetingViewModel {
         semester: meeting.host.semester,
         course: meeting.host.course
       },
-      _idHost: meeting.host.idHost
+      _idHost: meeting.host.idHost,
+      students: meeting.students.map(StudentViewModel.toHTTP)
     }
   }
 }

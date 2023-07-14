@@ -9,7 +9,8 @@ import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
 import { CoursesController } from "./controllers/courses.controller";
 import { GetCourses } from "@application/use-cases/get-courses";
 import { SearchMeeting } from "@application/use-cases/search-meetings";
-import { UpdateMeeting } from "@application/use-cases/update-meeting.";
+import { UpdateMeeting } from "@application/use-cases/update-meeting";
+import { ConfirmPresence } from "@application/use-cases/confirm-presence";
 
 @Module({
     imports: [DatabaseModule],
@@ -21,6 +22,7 @@ import { UpdateMeeting } from "@application/use-cases/update-meeting.";
         GetOpenMeetings,
         SearchMeeting,
         UpdateMeeting,
+        ConfirmPresence,
         GetCourses
     ]
 })

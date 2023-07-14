@@ -1,8 +1,9 @@
-import { AlunosOnReunioes, Aluno as RawAluno, Reuniao as RawReuniao, Unidade as RawUnidade } from "@prisma/client"
+import { AlunosOnReunioes as RawAlunosReunioes, Aluno as RawAluno, Reuniao as RawReuniao, Unidade as RawUnidade } from "@prisma/client"
 import { Course } from "@application/entities/course";
 import { Host } from "@application/entities/host";
 import { Meeting } from "@application/entities/meeting";
 import { Unit } from "@application/entities/unit";
+import { Student } from "@application/entities/student";
 
 interface RawAlunoInterface extends RawAluno {
   curso: {
@@ -12,13 +13,17 @@ interface RawAlunoInterface extends RawAluno {
   }
 }
 
+interface RawAlunoReuniaoInterface extends RawAlunosReunioes {
+  aluno: RawAlunoInterface
+}
+
 interface RawReuniaoWithJoins extends RawReuniao {
     organizador: {
       idOrganizador: string,
       alunoId: string,
       aluno: RawAlunoInterface,
     },
-    alunos?: AlunosOnReunioes[]
+    alunos?: RawAlunoReuniaoInterface[]
 }
 
 export class PrismaMeetingMapper {
@@ -76,9 +81,29 @@ export class PrismaMeetingMapper {
   }
 
   static toDomain(meeting: RawReuniaoWithJoins) {
+    let students: Host[] = [];
     let studentsWhoConfirmedPresence: number;
 
-    meeting.alunos ? studentsWhoConfirmedPresence = meeting.alunos.length : studentsWhoConfirmedPresence = 0;
+    if(meeting.alunos) {
+      studentsWhoConfirmedPresence = meeting.alunos.length;
+
+      for(let i = 0; i < meeting.alunos.length; i++) {
+        let studentUnit = new Unit(meeting.alunos[i].aluno.curso.unidade.nome, meeting.alunos[i].aluno.curso.unidade.idUnidade)
+        let studentCourse = new Course(meeting.alunos[i].aluno.curso.nome, studentUnit, meeting.alunos[i].aluno.cursoId);
+        let student = new Host({
+          course: studentCourse,
+          email: meeting.alunos[i].aluno.email,
+          name: meeting.alunos[i].aluno.nome,
+          password: meeting.alunos[i].aluno.senha,
+          semester: meeting.alunos[i].aluno.semestre
+        }
+        );
+
+        students.push(student);
+      }
+    } else {
+      studentsWhoConfirmedPresence = 0;
+    }
     
     const unit = new Unit(meeting.organizador.aluno.curso.unidade.nome, meeting.organizador.aluno.curso.unidade.idUnidade);
     
@@ -102,7 +127,8 @@ export class PrismaMeetingMapper {
       num_persons: meeting.num_pessoas + studentsWhoConfirmedPresence,
       place: meeting.local,
       status: meeting.status,
-      host
+      host,
+      students: students
     }, meeting.idReuniao);
   }
 }

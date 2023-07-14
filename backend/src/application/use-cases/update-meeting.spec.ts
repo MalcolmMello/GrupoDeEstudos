@@ -2,7 +2,7 @@ import { InMemoryMeetingsRepository } from "@test/repositories/in-memory-meeting
 import { InMemoryStudentsRepository } from "@test/repositories/in-memory-students-repositories";
 import { CreateMeeting } from "./create-meeting";
 import { makeStudent } from "@test/factories/student-factory";
-import { UpdateMeeting } from "./update-meeting.";
+import { UpdateMeeting } from "./update-meeting";
 
 describe('Update Meeting', () => {
   it('should be able to update a meeting', async () => {

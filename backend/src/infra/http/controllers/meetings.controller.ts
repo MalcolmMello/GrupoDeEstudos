@@ -9,7 +9,9 @@ import { CancelMeeting } from "@application/use-cases/cancel-meeting";
 import { GetOpenMeetings } from "@application/use-cases/get-open-meetings";
 import { SearchMeeting } from "@application/use-cases/search-meetings";
 import { UpdateMeetingBody } from "../dtos/UpdateMeetingBody";
-import { UpdateMeeting } from "@application/use-cases/update-meeting.";
+import { UpdateMeeting } from "@application/use-cases/update-meeting";
+import { ConfirmPresence } from "@application/use-cases/confirm-presence";
+import { ConfirmPresenceBody } from "../dtos/ConfirmPresenceBody";
 
 @Controller('meetings')
 export class MeetingsController {
@@ -18,7 +20,8 @@ export class MeetingsController {
     private cancelMeeting: CancelMeeting,
     private getOpenMeetings: GetOpenMeetings,
     private searchMeetings: SearchMeeting,
-    private updateMeeting: UpdateMeeting
+    private updateMeeting: UpdateMeeting,
+    private confirmPresence: ConfirmPresence
   ){}
 
   @UseGuards(AuthenticatedGuard)
@@ -138,6 +141,31 @@ export class MeetingsController {
         status: HttpStatus.NOT_FOUND,
         error: error.message,
       }, HttpStatus.NOT_FOUND, {
+        cause: error
+      });
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('presence')
+  async presence(@Body() body: ConfirmPresenceBody, @Request() req) {
+    const { idMeeting } = body;
+
+    const { id, idHost } = StudentViewModel.toHTTP(req.user);
+
+    console.log(id)
+
+    try {
+      const { message } = await this.confirmPresence.execute({idMeeting, idStudent: id, idHost});
+
+      return {
+        message
+      };
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.PRECONDITION_FAILED,
+        error: error.message,
+      }, HttpStatus.PRECONDITION_FAILED, {
         cause: error
       });
     }

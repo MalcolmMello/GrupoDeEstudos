@@ -39,8 +39,14 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
     return meetings;
   }
 
-  async confirmPresence(idStudent: string, idMeeting: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async confirmPresence(idMeeting: string, idStudent: string, idHost: string): Promise<void> {
+    const meeting = this.meetings.find((item) => item.id === idMeeting);
+
+    if(meeting.host.idHost === idHost) {
+      throw new Error("You are the meeting host already.");
+    }
+
+    meeting.numPersons++;
   }
 
   async cancelPresence(idStudent: string, idMeeting: string): Promise<void> {

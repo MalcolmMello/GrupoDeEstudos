@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Host } from "./host";
+import { Student } from "./student";
 
 export interface MeetingProps {
     subject: string,
@@ -8,7 +9,8 @@ export interface MeetingProps {
     status: string,
     num_persons: number,
     date_hour: Date
-    host: Host
+    host: Host,
+    students?: Host[]
 }
 
 export class Meeting {
@@ -82,5 +84,15 @@ export class Meeting {
 
     public get host(): Host {
         return this.props.host;
+    }
+
+    public set students(student: Host[]) {
+        for(let i = 0; i < student.length; i++) {
+            this.props.students.push(student[i]);
+        }
+    }
+
+    public get students(): Host[] {
+        return this.props.students;
     }
 }
