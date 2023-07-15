@@ -1,3 +1,5 @@
+import createStudentResponse from "./CreateStudentResponse";
+
 const createMeetingResponse = {
   meeting: {
     type: 'object',
@@ -75,7 +77,7 @@ const createMeetingResponse = {
       },
       students: {
         type: 'array',
-        items: {}
+        items: createStudentResponse.student
       }
     }
   }
