@@ -142,6 +142,17 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
         reuniaoId: idMeeting
       }
     });
+
+    await this.prisma.reuniao.update({
+      where: {
+        idReuniao: idMeeting
+      },
+      data: {
+        num_pessoas: {
+          increment: 1
+        }
+      }
+    })
   }
 
   async cancelPresence(idMeeting: string, idStudent: string, idHost: string): Promise<void> {
