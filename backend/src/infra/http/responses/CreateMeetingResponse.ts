@@ -20,6 +20,10 @@ const createMeetingResponse = {
         type: 'string',
         example: 'Franco da Rocha Mall'
       },
+      status: {
+        type: 'string',
+        example: 'Em aberto'
+      },
       num_persons: {
         type: 'integer',
         example: 8
