@@ -48,6 +48,7 @@ model Reuniao {
   materia       String             @db.VarChar(100)
   descricao     String             @db.VarChar(350)
   local         String             @db.VarChar(200)
+  status        String             @default("Em aberto") @db.VarChar(100)
   num_pessoas   Int
   data_hora     DateTime
   organizadorId String

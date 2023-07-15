@@ -3,6 +3,7 @@ import { StudentsRepository } from "@application/repositories/students-repositor
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { PrismaStudentMapper } from "../mappers/prisma-student-mapper";
+import { Host } from "@application/entities/host";
 
 @Injectable()
 export class PrismaStudentsRepository implements StudentsRepository {
@@ -10,18 +11,30 @@ export class PrismaStudentsRepository implements StudentsRepository {
         private prisma: PrismaService
     ) {}
     
-    async create(student: Student): Promise<void> {
+    async create(student: Host): Promise<void> {
         const raw = PrismaStudentMapper.toPrisma(student);
         
-        await this.prisma.aluno.create({
+        const newAluno = await this.prisma.aluno.create({
             data: raw
+        });
+
+        const idOrganizador = student.idHost;
+
+        await this.prisma.organizador.create({
+            data: {
+                alunoId: newAluno.idAluno,
+                idOrganizador
+            }
         });
     }
 
-    async findByEmail(email: string): Promise<Student | null> {
+    async findByEmail(email: string): Promise<Host | null> {
         const student = await this.prisma.aluno.findUnique({
             where: {
-                email: email
+                email: email,
+            },
+            include: {
+                organizador: true
             }
         });
 
@@ -43,6 +56,66 @@ export class PrismaStudentsRepository implements StudentsRepository {
         }
 
         return PrismaStudentMapper.toDomain(student, course);
+    }
+
+    async findById(id: string): Promise<Host | null> {
+        const student = await this.prisma.aluno.findUnique({
+            where: {
+                idAluno: id
+            },
+            include: {
+                organizador: true
+            }
+        });
+
+        if(!student) {
+            return null;
+        }
+
+        const course = await this.prisma.curso.findUnique({
+            include: {
+                unidade: true
+            },
+            where: {
+                idCurso: student.cursoId
+            }
+        });
+
+        if(!course) {
+            return null;
+        }
+
+        return PrismaStudentMapper.toDomain(student, course);
+    }
+
+    async findByHostId(id: string): Promise<Host | null> {
+        const student = await this.prisma.organizador.findUnique({
+            where: {
+                idOrganizador: id
+            },
+            include: {
+                aluno: true
+            }
+        });
+
+        if(!student) {
+            return null;
+        }
+
+        const course = await this.prisma.curso.findUnique({
+            include: {
+                unidade: true
+            },
+            where: {
+                idCurso: student.aluno.cursoId
+            }
+        });
+
+        if(!course) {
+            return null;
+        }
+
+        return PrismaStudentMapper.toDomain({...student.aluno, organizador: student}, course);
     }
     
 }

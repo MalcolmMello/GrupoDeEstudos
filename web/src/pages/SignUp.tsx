@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ISignUp } from '../types/Signup';
 import { api } from '../lib/axios';
+import { ICourse } from '../types/Course';
 
 const schema = z
 	.object({
@@ -43,8 +44,10 @@ const schema = z
 	});
 
 const SignUp = () => {
+	const [course, setCourse] = useState<ICourse[]>([]);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
@@ -64,13 +67,29 @@ const SignUp = () => {
 				semester,
 				idCourse,
 			});
-			navigate('/');
+			navigate('/login');
 		} catch (error) {
 			console.log(error);
 		} finally {
 			setLoading(false);
 		}
 	};
+
+	const getCourses = async () => {
+		try {
+			const response = await api.get('courses');
+			const responseFormated = response.data.sort((a: any, b: any) =>
+				a.name.localeCompare(b.name)
+			);
+			setCourse(responseFormated);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		getCourses();
+	}, []);
 
 	return (
 		<form className="py-24 m-auto" onSubmit={handleSubmit(onSubmit)}>
@@ -182,12 +201,13 @@ const SignUp = () => {
 								className="bg-gray-100 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-[10px] px-4 block w-full truncate"
 								{...register('idCourse')}
 							>
-								<option value="55b3a778-5ca8-4ac6-a6c1-586b7c5ece25">
-									Gestão da Energia e Eficiência Energética
-								</option>
-								<option value="55b3a778-5ca8-4ac6-a6c1-586b7c5ece25">
-									Gestão da Tecnologia da Informação
-								</option>
+								{course.map((course, index) => {
+									return (
+										<option key={index} value={course._id}>
+											{course.name}
+										</option>
+									);
+								})}
 							</select>
 						</div>
 					</div>

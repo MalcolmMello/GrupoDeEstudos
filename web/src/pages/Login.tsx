@@ -5,8 +5,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ILogin } from '../types/Login';
 import { api } from '../lib/axios';
-import { useSignIn } from 'react-auth-kit';
-import axios from 'axios';
 
 const schema = z.object({
 	username: z
@@ -22,8 +20,11 @@ const schema = z.object({
 		.min(8, {
 			message: 'Senha inválida. A senha deve ter pelo menos 8 caracteres.',
 		})
-		.max(100, { message: 'A senha deve conter no máximo 100 caracteres' }),
-	// Tirei o Regex pra testar a ReqRes API
+		.max(100, { message: 'A senha deve conter no máximo 100 caracteres' })
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+			'A senha deve conter pelo menos 8 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.'
+		),
 });
 
 const Login = () => {
@@ -43,7 +44,7 @@ const Login = () => {
 		try {
 			setLoading(true);
 			const { username, password } = data;
-			const response = await api.post('students/login', { username, password });
+			await api.post('students/login', { username, password });
 
 			navigate('/');
 		} catch (error) {
@@ -55,7 +56,6 @@ const Login = () => {
 	};
 
 	return (
-		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		<form className="py-40 m-auto" onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl">
 				<div className="hidden lg:block lg:w-1/2">

@@ -1,14 +1,29 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { IMeet } from '../../../types/Meet';
+import { api } from '../../../lib/axios';
+import { AxiosError } from 'axios';
 
-const ButtonCancel = () => {
-	function onSubmit() {
-		window.alert('Você Desmarcou');
+const ButtonDisconfirm = (meet: IMeet) => {
+	async function onSubmit() {
+		try {
+			await api.post('meetings/cancel-presence', { idMeeting: meet._id });
+			alert('Reunião desmarcada!');
+		} catch (error) {
+			if (
+				(error as AxiosError).response &&
+				(error as AxiosError).response?.status === 412
+			) {
+				alert('Você não pode desmarcar uma reunião que você criou!');
+			} else {
+				console.log(error);
+			}
+		}
 	}
 
 	return (
 		<AlertDialog.Root>
 			<AlertDialog.Trigger asChild>
-				<button className="bg-gray-700 text-white font-medium px-4 py-2 rounded-lg">
+				<button className="bg-gray-700 text-white font-medium px-4 py-3 rounded-lg">
 					Desmarcar
 				</button>
 			</AlertDialog.Trigger>
@@ -42,4 +57,4 @@ const ButtonCancel = () => {
 	);
 };
 
-export default ButtonCancel;
+export default ButtonDisconfirm;

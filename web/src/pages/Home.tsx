@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Filter from '../components/Filter';
 import Header from '../components/Header';
-import { MeetItem } from '../components/MeetItem/MeetItem';
-import MeetItemSkeleton from '../components/MeetItem/MeetItemSkeleton';
 import SearchButton from '../components/SearchButton';
 import { IMeet } from '../types/Meet';
 import { api } from '../lib/axios';
+import { Meet } from '../components/Meet';
 
 const Home = () => {
 	const [loading, setLoading] = useState(false);
@@ -13,7 +12,7 @@ const Home = () => {
 
 	const getAllMeets = async () => {
 		try {
-			const response = await api.get('meetings/open-meetings');
+			const response = await api.get('meetings/open');
 			setMeets(response.data.meetings);
 		} catch (error) {
 			console.log(error);
@@ -37,16 +36,17 @@ const Home = () => {
 					<Filter />
 				</div>
 			</div>
-			<main className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 px-6 sm:p-0 gap-12 mt-16 place-content-around sm:w-3/4 mx-auto">
-				{loading &&
-					Array.from({ length: 6 }).map((_, index) => (
-						<MeetItemSkeleton key={index} />
-					))}
+			<main className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 px-6 sm:p-0 gap-12 mt-10 place-content-around sm:w-3/4 mx-auto">
 				{meets.length === 0 ? (
-					<p className='text-white font-semibold'>Nenhuma reunião foi criada recentemente.</p>
+					<p className="text-white font-semibold">
+						Nenhuma reunião foi criada recentemente.
+					</p>
 				) : (
 					meets.map((meet, index) => (
-						<MeetItem key={index} {...meet} />
+						<Meet.Root key={index}>
+							<Meet.Content {...meet} />
+							<Meet.ButtonConfirm {...meet}/>
+						</Meet.Root>
 					))
 				)}
 			</main>

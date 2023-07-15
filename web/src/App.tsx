@@ -3,9 +3,9 @@ import MainRoutes from './Routes/MainRoutes';
 
 function App() {
 	return (
-		<BrowserRouter>
-			<MainRoutes />
-		</BrowserRouter>
+			<BrowserRouter>
+				<MainRoutes />
+			</BrowserRouter>
 	);
 }
 

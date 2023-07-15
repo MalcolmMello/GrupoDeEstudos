@@ -56,7 +56,7 @@ export class Student {
     public get password(): string {
         return this.props.password;
     }
-
+    
     public set semester(semester: number) {
         const isSemesterValid = this.validateSemester(semester);
 

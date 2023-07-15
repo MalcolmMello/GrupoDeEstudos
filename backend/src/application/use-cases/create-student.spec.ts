@@ -4,11 +4,11 @@ import { InMemoryCourseRepository } from "@test/repositories/in-memory-course-re
 import { makeCourse } from "@test/factories/course-factory";
 
 describe('Create student', () => {
-    it('should be able to create a student', async () => {
-        const studentsRepository = new InMemoryStudentsRepository();
-        const courseRepository = new InMemoryCourseRepository();
-        const createStudent = new CreateStudent(studentsRepository, courseRepository);
+    const studentsRepository = new InMemoryStudentsRepository();
+    const courseRepository = new InMemoryCourseRepository();
+    const createStudent = new CreateStudent(studentsRepository, courseRepository);
 
+    it('should be able to create a student', async () => {
         const course = makeCourse();
         await courseRepository.create(course);
 
@@ -22,7 +22,22 @@ describe('Create student', () => {
 
         expect(studentsRepository.students).toHaveLength(1);
         expect(studentsRepository.students[0]).toEqual(student);
+    });
 
+    it('should not be able to create a student', async () => {
+        const course = makeCourse();
+        await courseRepository.create(course);
 
-    })
-})
+        try {
+            const response = await createStudent.execute({
+                name: "Aluno de teste",
+                email: "aluno@gmail.com",
+                password: "senha321",
+                semester: 5,
+                idCourse: course.id
+            });
+        } catch (error) {
+            expect(error.message).toBe("Email is already registered.");    
+        }
+    });
+});

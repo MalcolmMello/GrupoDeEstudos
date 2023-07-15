@@ -1,25 +1,32 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
+import { api } from '../../../lib/axios';
+import { IMeet } from '../../../types/Meet';
 
-const ButtonConfirm = () => {
-	function onSubmit() {
-		window.alert('Reunião Marcada com Sucesso');
+const ButtonCancel = (meet: IMeet) => {
+	async function onSubmit() {
+		try {
+			await api.patch('meetings/cancel', { idMeeting: meet._id });
+			alert('Reunião apagada!');
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (
 		<AlertDialog.Root>
 			<AlertDialog.Trigger asChild>
-				<button className="bg-gray-700 text-white font-medium px-4 py-2 rounded-lg">
-					Marcar
+				<button className="bg-gray-700 text-white font-medium px-4 py-3 rounded-md shadow-lg">
+					Apagar
 				</button>
 			</AlertDialog.Trigger>
 			<AlertDialog.Portal>
 				<AlertDialog.Overlay className="bg-blackA9 data-[state=open]:animate-overlayShow fixed inset-0" />
 				<AlertDialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-zinc-50 p-[25px] shadow focus:outline-none">
 					<AlertDialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
-						Marcar Reunião
+						Apagar Reunião
 					</AlertDialog.Title>
 					<AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
-						Você realmente deseja se inscrever nessa reunião?
+						Você realmente deseja apagar essa reunião?
 					</AlertDialog.Description>
 					<div className="flex items-center justify-end gap-[25px]">
 						<AlertDialog.Cancel asChild>
@@ -32,7 +39,7 @@ const ButtonConfirm = () => {
 								className="font-medium border-2 border-gray-700 py-2 px-4 rounded-lg hover:bg-gray-700 hover:text-white"
 								onClick={onSubmit}
 							>
-								Marcar
+								Apagar
 							</button>
 						</AlertDialog.Action>
 					</div>
@@ -41,4 +48,5 @@ const ButtonConfirm = () => {
 		</AlertDialog.Root>
 	);
 };
-export default ButtonConfirm;
+
+export default ButtonCancel;
