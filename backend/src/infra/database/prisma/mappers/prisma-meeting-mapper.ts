@@ -39,19 +39,37 @@ export class PrismaMeetingMapper {
     }
   }
 
-  static toPrismaSearch(subject: string, description: string, semester?: number, date_hour?: Date) {
-    const orStatement: any = [
-      {
-        descricao: {
-          contains: description
+  static toPrismaSearch(subject: string, description: string, semester?: number, date_hour?: Date, idHost?: string) {
+    const orStatement: any = [];
+    
+    if(idHost) {
+      orStatement.push(
+        {
+          organizadorId: {
+            equals: idHost
+          }
         }
-      },
-      {
-        materia: {
-          contains: subject
+      )
+    }
+    if(description) {
+      orStatement.push(
+        {
+          descricao: {
+            contains: description
+          }
         }
-      },
-    ];
+      );
+    }
+
+    if(subject) {
+      orStatement.push(
+        {
+          materia: {
+            contains: subject
+          }
+        },
+      );
+    }
 
     if(semester) {
       orStatement.push(

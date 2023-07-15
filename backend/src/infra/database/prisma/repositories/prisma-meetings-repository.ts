@@ -44,6 +44,9 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
       where: {
         idReuniao: idMeeting,
         organizadorId: idHost
+      },
+      orderBy: {
+        data_hora: "desc"
       }
     });
 
@@ -141,8 +144,44 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
     });
   }
 
-  async cancelPresence(idStudent: string, idMeeting: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async cancelPresence(idMeeting: string, idStudent: string, idHost: string): Promise<void> {
+    const meetingExists = await this.prisma.reuniao.findFirst({
+      where: {
+        idReuniao: idMeeting,
+        AND: {
+          alunos: {
+            some: {
+              alunoId: idStudent
+            }
+          }
+        }
+      }
+    });
+
+    const isStudentTheMeetingHost = await this.prisma.reuniao.findFirst({
+      where: {
+        idReuniao: idMeeting,
+        organizadorId: idHost
+      }
+    });
+
+
+    if(isStudentTheMeetingHost) {
+      throw new Error("You are the meeting host!");
+    }
+
+    if(!meetingExists) {
+      throw new Error("Meeting doesn't exist or you already cancel your presence.");
+    }
+
+    await this.prisma.alunosOnReunioes.delete({
+      where: {
+        alunoId_reuniaoId: {
+          alunoId: idStudent,
+          reuniaoId: idMeeting
+        }
+      }
+    });
   }
 
   async studentScheduledMeetings(idStudent: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
@@ -191,8 +230,48 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
     return meetings.map(PrismaMeetingMapper.toDomain);
   }
 
-  async hostMeetings(): Promise<Meeting[]> {
-    throw new Error("Method not implemented.");
+  async hostMeetings(idHost: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
+    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour, idHost);
+    
+    const meetings = await this.prisma.reuniao.findMany({
+      where: {
+        OR: orStatement
+      },
+      include: {
+        organizador:{
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        },
+        alunos: {
+          include: {
+            aluno: {
+              include: {
+                curso: {
+                  include: {
+                    unidade: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if(!meetings) {
+      throw new Error("No open meetings.");
+    }
+
+    return meetings.map(PrismaMeetingMapper.toDomain);
   }
 
   async searchMeetings(subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {

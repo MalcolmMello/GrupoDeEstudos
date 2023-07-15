@@ -65,13 +65,21 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
     meeting.setstudents = [student];
   }
 
-  async cancelPresence(idStudent: string, idMeeting: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async cancelPresence(idMeeting: string,idStudent: string, idHost: string): Promise<void> {
+    const meeting = this.meetings.find((item) => item.id === idMeeting);
+
+    if(!meeting) {
+      throw new Error("No meeting found.");
+    }
+
+    if(meeting.host.idHost === idHost) {
+      throw new Error("You are the meeting host.");
+    }
+
+    meeting.setstudents = meeting.getstudents.filter((item) => item.id !== idStudent);
   }
 
   async studentScheduledMeetings(idStudent: string): Promise<Meeting[]> {
-    console.log(this.meetings)
-    
     const meetings = this.meetings.filter((item) => {
       for(let i = 0; i < item.getstudents.length; i++) {
         item.getstudents[i].id === idStudent;
@@ -86,8 +94,14 @@ export class InMemoryMeetingsRepository implements MeetingsRepository {
     return meetings;
   }
 
-  async hostMeetings(): Promise<Meeting[]> {
-    throw new Error("Method not implemented.");
+  async hostMeetings(idHost: string): Promise<Meeting[]> {
+    const meetings = this.meetings.filter((item) => item.host.idHost === idHost);
+
+    if(!meetings) {
+      throw new Error("No meetings found.");
+    }
+
+    return meetings;
   }
 
   async searchMeetings(subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {

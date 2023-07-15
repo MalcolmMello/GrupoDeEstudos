@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsUUID } from "class-validator"
 
-export class ConfirmPresenceBody {
+export class ConfirmOrCancelPresenceBody {
   @IsNotEmpty()
   @IsUUID()
   idMeeting: string

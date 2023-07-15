@@ -20,7 +20,7 @@ export class Meeting {
     constructor(props: MeetingProps, id?: string, students?: Host[]) {
         this._id = id ?? randomUUID();
         this.props = props;
-        this.students = students
+        this.students = students ?? []
     }
 
     public set id(id: string) {

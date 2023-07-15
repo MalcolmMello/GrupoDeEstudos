@@ -11,8 +11,10 @@ import { SearchMeeting } from "@application/use-cases/search-meetings";
 import { UpdateMeetingBody } from "../dtos/UpdateMeetingBody";
 import { UpdateMeeting } from "@application/use-cases/update-meeting";
 import { ConfirmPresence } from "@application/use-cases/confirm-presence";
-import { ConfirmPresenceBody } from "../dtos/ConfirmPresenceBody";
+import { ConfirmOrCancelPresenceBody } from "../dtos/ConfirmOrCancelPresenceBody";
 import { ScheduledMeetings } from "@application/use-cases/scheduled-meetings";
+import { CancelPresence } from "@application/use-cases/cancel-presence";
+import { GetHostMeetings } from "@application/use-cases/get-host-meetings";
 
 @Controller('meetings')
 export class MeetingsController {
@@ -23,7 +25,9 @@ export class MeetingsController {
     private searchMeetings: SearchMeeting,
     private updateMeeting: UpdateMeeting,
     private confirmPresence: ConfirmPresence,
-    private scheduledMeetings: ScheduledMeetings
+    private cancelPresence: CancelPresence,
+    private scheduledMeetings: ScheduledMeetings,
+    private hostMeetings: GetHostMeetings
   ){}
 
   @UseGuards(AuthenticatedGuard)
@@ -120,6 +124,44 @@ export class MeetingsController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @Get('host')
+  async host(
+    @Request() req,
+    @Query('subject') subject: string | undefined, 
+    @Query('description') description: string | undefined, 
+    @Query('date_hour') date_hour: string | undefined,
+    @Query('semester') semester: string | undefined
+  ) {
+    try {
+      let dateHourStringToDate: Date | undefined;
+      let semesterToNumber: number | undefined;
+
+      if(date_hour) { dateHourStringToDate = new Date(date_hour); }
+
+      if(semester) { semesterToNumber = Number(semester); }
+
+      const { idHost } = StudentViewModel.toHTTP(req.user);
+      
+      const { meetings } = await this.hostMeetings.execute({ 
+        idHost,
+        subject, 
+        description, 
+        date_hour: dateHourStringToDate, 
+        semester: semesterToNumber 
+      });
+
+      return { meetings: meetings.map(MeetingViewModel.toHTTP) }
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: error.message,
+      }, HttpStatus.NOT_FOUND, {
+        cause: error
+      });
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Get('search')
   async search(
     @Query('subject') subject: string | undefined, 
@@ -149,14 +191,37 @@ export class MeetingsController {
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Post('presence')
-  async presence(@Body() body: ConfirmPresenceBody, @Request() req) {
+  @Post('confirm-presence')
+  async presenceConfirmed(@Body() body: ConfirmOrCancelPresenceBody, @Request() req) {
     const { idMeeting } = body;
 
     const { id, idHost } = StudentViewModel.toHTTP(req.user);
 
     try {
       const { message } = await this.confirmPresence.execute({idMeeting, idStudent: id, idHost});
+
+      return {
+        message
+      };
+    } catch (error) {
+      throw new HttpException({
+        status: HttpStatus.PRECONDITION_FAILED,
+        error: error.message,
+      }, HttpStatus.PRECONDITION_FAILED, {
+        cause: error
+      });
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('cancel-presence')
+  async presenceCanceled(@Body() body: ConfirmOrCancelPresenceBody, @Request() req) {
+    const { idMeeting } = body;
+
+    const { id, idHost } = StudentViewModel.toHTTP(req.user);
+
+    try {
+      const { message } = await this.cancelPresence.execute({idMeeting, idStudent: id, idHost});
 
       return {
         message
