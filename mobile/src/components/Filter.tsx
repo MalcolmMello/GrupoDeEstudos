@@ -4,7 +4,6 @@ import { View, StyleSheet } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 
 const Filter = () => {
-  const [opened, setOpened] = useState(false);
   const [selected, setSelected] = useState<number>();
 
   const options = [

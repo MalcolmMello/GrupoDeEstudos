@@ -18,7 +18,7 @@ const ButtonConfirm = () => {
       </TouchableOpacity>
       {opened && (
         <View className="bg-sky-500 h-48 w-80 p-4 absolute right-2 rounded-lg justify-between -bottom-2">
-          <Text className="font-semibold text-2xl text-white">Desmarcar</Text>
+          <Text className="font-semibold text-2xl text-white">Marcar</Text>
           <Text className="text-white">Você realmente deseja marcar essa reunião?</Text>
           <View className="flex-row justify-end gap-4">
             <TouchableOpacity
