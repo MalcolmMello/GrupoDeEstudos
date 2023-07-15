@@ -1,6 +1,9 @@
 import { GetCourses } from "@application/use-cases/get-courses";
 import { Controller, Get, HttpException, HttpStatus } from "@nestjs/common";
+import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import coursesResponse from "../responses/CoursesResponses";
 
+@ApiTags('courses')
 @Controller('courses')
 export class CoursesController {
   constructor(
@@ -8,6 +11,14 @@ export class CoursesController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: "Return all available courses" })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'array',
+      items: coursesResponse
+    }
+  })
   async courses() {
     try {
       const { courses } = await this.getCourses.execute();
