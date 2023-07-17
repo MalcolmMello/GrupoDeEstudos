@@ -1,14 +1,29 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
+import Login from '../screens/Login';
 import MyMeetings from '../screens/MyMeetings';
 import NewMeeting from '../screens/NewMeeting';
 import ScheduledMeetings from '../screens/ScheduledMeetings';
+import SignUp from '../screens/SignUp';
+
+export type RootStackParams = {
+  bottomBar: any;
+  home: any;
+  scheduledmeetings: any;
+  mymeetings: any;
+  newmeeting: any;
+  login: any;
+  signup: any;
+};
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator<RootStackParams>();
 
-const AppRoutes = () => {
+const TabRoutes = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -62,4 +77,18 @@ const AppRoutes = () => {
   );
 };
 
-export default AppRoutes;
+export default TabRoutes;
+
+export function AppRoutes() {
+  return (
+    <NavigationContainer independent>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <>
+          {/* <Stack.Screen name="login" component={Login} />
+          <Stack.Screen name="signup" component={SignUp} /> */}
+          <Stack.Screen name="bottomBar" component={TabRoutes} options={{ headerShown: false }} />
+        </>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
