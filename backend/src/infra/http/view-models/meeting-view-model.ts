@@ -10,6 +10,7 @@ export class MeetingViewModel {
       place: meeting.place,
       num_persons: meeting.numPersons,
       date_hour: meeting.dateHour,
+      status: meeting.status,
       host: {
         _id: meeting.host.idHost,
         name: meeting.host.name,

@@ -23,11 +23,12 @@ const schema = z.object({
 		.max(350, { message: 'A descrição deve conter no máximo 100 caracteres' }),
 	date_hour: z.string().refine(
 		(value) => {
-			const date = dayjs(value, 'yyyy-mm-dd hh:mm:ss');
-			return date.isValid();
+			const currentDate = dayjs();
+			const selectedDate = dayjs(value, 'yyyy-MM-DDTHH:mm');
+			return selectedDate.isValid() && selectedDate.isAfter(currentDate);
 		},
 		{
-			message: "That's not a valid date and time!",
+			message: 'A data deve ser posterior ao dia atual',
 		}
 	),
 	num_persons: z.coerce.number().nonnegative(),

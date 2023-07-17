@@ -5,7 +5,7 @@ export interface IMeet {
 	place: string;
 	num_persons: number;
 	date_hour: Date;
-	status: string;
+	status: 'Em aberto' | 'Concluída' | 'Cancelada';
 	host: {
 		_id: string;
 		name: string;

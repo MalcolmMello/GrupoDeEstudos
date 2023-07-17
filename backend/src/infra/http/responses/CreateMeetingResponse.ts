@@ -1,3 +1,5 @@
+import createStudentResponse from "./CreateStudentResponse";
+
 const createMeetingResponse = {
   meeting: {
     type: 'object',
@@ -17,6 +19,10 @@ const createMeetingResponse = {
       place: {
         type: 'string',
         example: 'Franco da Rocha Mall'
+      },
+      status: {
+        type: 'string',
+        example: 'Em aberto'
       },
       num_persons: {
         type: 'integer',
@@ -75,7 +81,7 @@ const createMeetingResponse = {
       },
       students: {
         type: 'array',
-        items: {}
+        items: createStudentResponse.student
       }
     }
   }

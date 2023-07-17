@@ -3,7 +3,6 @@ import { Course } from "@application/entities/course";
 import { Host } from "@application/entities/host";
 import { Meeting } from "@application/entities/meeting";
 import { Unit } from "@application/entities/unit";
-import { Student } from "@application/entities/student";
 
 interface RawAlunoInterface extends RawAluno {
   curso: {
@@ -26,6 +25,15 @@ interface RawReuniaoWithJoins extends RawReuniao {
     alunos?: RawAlunoReuniaoInterface[]
 }
 
+interface PrismaSearch {
+  subject?: string
+  description?: string 
+  semester?: number
+  idHost?: string,
+  idStudent?: string, 
+  date_hour?: Date 
+}
+
 export class PrismaMeetingMapper {
   static toPrisma(meeting: Meeting) {
     return {
@@ -39,9 +47,18 @@ export class PrismaMeetingMapper {
     }
   }
 
-  static toPrismaSearch(subject: string, description: string, semester?: number, date_hour?: Date, idHost?: string) {
+  static toPrismaSearch({semester, subject, description, date_hour, idHost, idStudent}: PrismaSearch) {
     const orStatement: any = [];
     
+    if(idStudent) {
+      orStatement.push(
+        {
+          alunos: {
+            some: {alunoId: idStudent}
+          }
+        }
+      )
+    }
     if(idHost) {
       orStatement.push(
         {
@@ -60,7 +77,6 @@ export class PrismaMeetingMapper {
         }
       );
     }
-
     if(subject) {
       orStatement.push(
         {
@@ -70,7 +86,6 @@ export class PrismaMeetingMapper {
         },
       );
     }
-
     if(semester) {
       orStatement.push(
         {
@@ -84,7 +99,6 @@ export class PrismaMeetingMapper {
         }
       );
     }
-
     if(date_hour) {
       orStatement.push(
         {

@@ -13,7 +13,7 @@ const ButtonConfirm = (meet: IMeet) => {
 				(error as AxiosError).response &&
 				(error as AxiosError).response?.status === 412
 			) {
-				alert('Você não pode confirmar uma reunião que você criou!');
+				alert('Você não pode marcar uma reunião que você criou ou que você ja marcou!');
 			} else {
 				console.log(error);
 			}
@@ -28,12 +28,12 @@ const ButtonConfirm = (meet: IMeet) => {
 				</button>
 			</AlertDialog.Trigger>
 			<AlertDialog.Portal>
-				<AlertDialog.Overlay className="bg-blackA9 data-[state=open]:animate-overlayShow fixed inset-0" />
-				<AlertDialog.Content className="data-[state=open]:animate-contentShow fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-zinc-50 p-[25px] shadow focus:outline-none">
-					<AlertDialog.Title className="text-mauve12 m-0 text-[17px] font-medium">
+				<AlertDialog.Overlay className="fixed inset-0" />
+				<AlertDialog.Content className="fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[500px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] bg-zinc-50 p-[25px] shadow focus:outline-none">
+					<AlertDialog.Title className="m-0 text-[17px] font-medium">
 						Marcar Reunião
 					</AlertDialog.Title>
-					<AlertDialog.Description className="text-mauve11 mt-4 mb-5 text-[15px] leading-normal">
+					<AlertDialog.Description className="mt-4 mb-5 text-[15px] leading-normal">
 						Você realmente deseja se inscrever nessa reunião?
 					</AlertDialog.Description>
 					<div className="flex items-center justify-end gap-[25px]">

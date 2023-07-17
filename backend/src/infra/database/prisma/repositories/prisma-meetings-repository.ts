@@ -196,7 +196,8 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
   }
 
   async studentScheduledMeetings(idStudent: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
-    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour);
+    const orStatement = PrismaMeetingMapper.toPrismaSearch({ subject, description, semester, date_hour, idStudent });
+   
     const meetings = await this.prisma.reuniao.findMany({
       where: {
         OR: orStatement,
@@ -242,7 +243,7 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
   }
 
   async hostMeetings(idHost: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
-    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour, idHost);
+    const orStatement = PrismaMeetingMapper.toPrismaSearch({subject, description, semester, date_hour, idHost});
     
     const meetings = await this.prisma.reuniao.findMany({
       where: {
@@ -286,7 +287,7 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
   }
 
   async searchMeetings(subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
-    const orStatement = PrismaMeetingMapper.toPrismaSearch(subject, description, semester, date_hour);
+    const orStatement = PrismaMeetingMapper.toPrismaSearch({subject, description, semester, date_hour});
     
     const meetings = await this.prisma.reuniao.findMany({
       where: {
