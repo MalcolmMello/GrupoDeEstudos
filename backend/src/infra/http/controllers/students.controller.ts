@@ -1,5 +1,5 @@
 import { CreateStudent } from "@application/use-cases/create-student";
-import { Body, Controller, Get, HttpException, HttpStatus, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Request, UseGuards, Response } from "@nestjs/common";
 import { CreateStudentBody } from "../dtos/CreateStudentBody";
 import { StudentViewModel } from "../view-models/student-view-model";
 import { LocalAuthGuard } from "@infra/auth/local-auth.guard";
@@ -95,5 +95,11 @@ export class StudentsController {
     })
     async getHello(@Request() req): Promise<any> {
         return { student: StudentViewModel.toHTTP(req.user) };
+    }
+
+    @Get('/logout')
+    async logout(@Request() req, @Response() res) {
+        req.session.destroy();
+        return { msg: 'The user session has ended' }
     }
 }
