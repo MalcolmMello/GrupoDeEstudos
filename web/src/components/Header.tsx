@@ -1,11 +1,19 @@
 import { Link } from 'react-router-dom';
 import ListIcon from './ListIcon';
+import { useContext } from 'react';
+import logo from '../../public/logo.png';
+import { AuthContext } from '../context/AuthContext';
 
 const Header = () => {
+	const { user, isAuthenticated } = useContext(AuthContext);
 
 	return (
 		<header className="h-24 w-full sm:w-3/4 mx-auto flex justify-between sm:grid sm:grid-cols-3 items-center text-white text-sm sm:text-base font-sans font-medium gap-14 px-6 sm:px-0">
-			<div className="w-12 h-12 rounded-full bg-white"></div>
+			<div className="w-12 h-12 rounded-full">
+				<Link to={'/'}>
+					<img src={logo} alt="" className="rounded-full" />
+				</Link>
+			</div>
 			<nav className="col-span-2 justify-between hidden sm:flex ">
 				<ul className="flex gap-4 lg:gap-12">
 					<Link to={'/'}>
@@ -24,11 +32,17 @@ const Header = () => {
 						</li>
 					</Link>
 				</ul>
-				<Link to={'/login'}>
-					<p className="hover:underline text-center text-sm md:text-base">
-						Login
-					</p>
-				</Link>
+				{isAuthenticated ? (
+					<pre className="capitalize font-sans">
+						{user?.name} - {user?.course.unit.name}
+					</pre>
+				) : (
+					<Link to={'/login'}>
+						<p className="hover:underline text-center text-sm md:text-base">
+							Login
+						</p>
+					</Link>
+				)}
 			</nav>
 			<ListIcon />
 		</header>

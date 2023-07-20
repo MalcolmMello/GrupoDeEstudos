@@ -47,12 +47,12 @@ const MeetContent = (meet: IMeet) => {
 
 			<div className="flex flex-col">
 				<div className="flex items-center justify-start gap-4">
-					<span className="text-base font-medium">
-						Local de Estudo: <span className="font-normal">{meet.place}</span>
-					</span>
+					<p className="text-base font-medium w-1/2">
+						Local: <span className="font-normal">{meet.place}</span>
+					</p>
 
 					<span className="text-lg">|</span>
-					<p className="font-medium text-sm md:text-base">
+					<p className="font-medium text-sm md:text-base w-1/2">
 						Pessoas Inscritas:
 						<span className="font-normal"> {meet.num_persons}</span>
 					</p>

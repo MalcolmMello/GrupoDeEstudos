@@ -2,12 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { api } from '../lib/axios';
 import { IMeet } from '../types/Meet';
+import { AuthContext, useAuth } from '../context/AuthContext';
 
 const schema = z.object({
 	subject: z.string().nonempty('A matéria é obrigatória').max(50, {
@@ -35,8 +36,15 @@ const schema = z.object({
 });
 
 const CreateMeet = () => {
+	const { user, isAuthenticated } = useContext(AuthContext);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+
+	const isAuth = () => {
+		if (!isAuthenticated) {
+			navigate('/login');
+		}
+	};
 
 	const {
 		register,
@@ -61,7 +69,10 @@ const CreateMeet = () => {
 	return (
 		<Dialog.Root>
 			<Dialog.Trigger asChild>
-				<button className="h-[40px] bg-white font-medium px-3 rounded-md">
+				<button
+					className="h-[40px] w-32 bg-white font-medium px-3 rounded-md"
+					onClick={() => isAuth()}
+				>
 					Criar Reunião
 				</button>
 			</Dialog.Trigger>
