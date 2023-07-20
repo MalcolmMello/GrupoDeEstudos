@@ -2,8 +2,19 @@ import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import { api } from '../../../lib/axios';
 import { IMeet } from '../../../types/Meet';
 import { AxiosError } from 'axios';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../context/AuthContext';
 
 const ButtonConfirm = (meet: IMeet) => {
+	const { user, isAuthenticated } = useContext(AuthContext);
+	const navigate = useNavigate();
+
+	const isAuth = () => {
+		if (!isAuthenticated) {
+			navigate('/login');
+		}
+	};
 	async function onSubmit() {
 		try {
 			await api.post('meetings/confirm-presence', { idMeeting: meet._id });
@@ -13,7 +24,9 @@ const ButtonConfirm = (meet: IMeet) => {
 				(error as AxiosError).response &&
 				(error as AxiosError).response?.status === 412
 			) {
-				alert('Você não pode marcar uma reunião que você criou ou que você ja marcou!');
+				alert(
+					'Você não pode marcar uma reunião que você criou ou que você ja marcou!'
+				);
 			} else {
 				console.log(error);
 			}
@@ -23,7 +36,10 @@ const ButtonConfirm = (meet: IMeet) => {
 	return (
 		<AlertDialog.Root>
 			<AlertDialog.Trigger asChild>
-				<button className="bg-gray-700 text-white font-medium px-4 py-3 rounded-lg">
+				<button
+					className="bg-gray-700 text-white font-medium px-4 py-3 rounded-lg"
+					onClick={() => isAuth()}
+				>
 					Marcar
 				</button>
 			</AlertDialog.Trigger>
