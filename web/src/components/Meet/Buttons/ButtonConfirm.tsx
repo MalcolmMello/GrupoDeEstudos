@@ -19,6 +19,7 @@ const ButtonConfirm = (meet: IMeet) => {
 		try {
 			await api.post('meetings/confirm-presence', { idMeeting: meet._id });
 			alert('Reunião marcada!');
+			window.location.reload();
 		} catch (error) {
 			if (
 				(error as AxiosError).response &&
