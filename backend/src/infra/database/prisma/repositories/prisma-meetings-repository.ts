@@ -193,6 +193,17 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
         }
       }
     });
+
+    await this.prisma.reuniao.update({
+      where: {
+        idReuniao: idMeeting
+      },
+      data: {
+        num_pessoas: {
+          decrement: 1
+        }
+      }
+    })
   }
 
   async studentScheduledMeetings(idStudent: string, subject?: string, description?: string, semester?: number, date_hour?: Date): Promise<Meeting[]> {
