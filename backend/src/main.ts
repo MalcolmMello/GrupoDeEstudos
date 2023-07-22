@@ -10,11 +10,11 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.use('trust proxy', 1);
+  app.set('trust proxy', 1);
   app.enableCors({
     origin: [process.env.CORS_URL],
     methods: ['GET', 'POST', 'PATCH'],
-    credentials: true
+    credentials: true,
   });
 
   const config = new DocumentBuilder()
