@@ -117,7 +117,7 @@ export class PrismaMeetingMapper {
     let studentsWhoConfirmedPresence: number;
 
     if(meeting.alunos) {
-      studentsWhoConfirmedPresence = meeting.alunos.length;
+      studentsWhoConfirmedPresence = meeting.num_pessoas;
 
       for(let i = 0; i < meeting.alunos.length; i++) {
         let studentUnit = new Unit(meeting.alunos[i].aluno.curso.unidade.nome, meeting.alunos[i].aluno.curso.unidade.idUnidade)
