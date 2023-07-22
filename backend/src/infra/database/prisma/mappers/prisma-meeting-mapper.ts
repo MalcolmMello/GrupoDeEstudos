@@ -156,7 +156,7 @@ export class PrismaMeetingMapper {
       subject: meeting.materia,
       description: meeting.descricao,
       date_hour: meeting.data_hora,
-      num_persons: meeting.num_pessoas + studentsWhoConfirmedPresence,
+      num_persons: meeting.num_pessoas,
       place: meeting.local,
       status: meeting.status,
       host,

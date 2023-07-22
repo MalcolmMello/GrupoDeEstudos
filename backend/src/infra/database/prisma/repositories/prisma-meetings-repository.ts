@@ -200,7 +200,7 @@ export class PrismaMeetingsRepository implements MeetingsRepository {
       },
       data: {
         num_pessoas: {
-          decrement: 1
+          decrement: 1,
         }
       }
     })
