@@ -27,7 +27,7 @@ export class AppModule implements NestModule {
             sameSite: 'none',
             httpOnly: false,
             maxAge: 3600000,
-            secure: true
+            secure: true,
           },
         }),
         passport.initialize(),
