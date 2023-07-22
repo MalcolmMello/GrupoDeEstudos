@@ -24,7 +24,7 @@ export class AppModule implements NestModule {
           secret: process.env.SESSION_SECRET,
           resave: false,
           cookie: {
-            sameSite: true,
+            sameSite: 'none',
             httpOnly: false,
             maxAge: 3600000,
           },
