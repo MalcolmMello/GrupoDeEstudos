@@ -8,6 +8,7 @@ const ButtonDisconfirm = (meet: IMeet) => {
 		try {
 			await api.post('meetings/cancel-presence', { idMeeting: meet._id });
 			alert('Reunião desmarcada!');
+			window.location.reload();
 		} catch (error) {
 			if (
 				(error as AxiosError).response &&

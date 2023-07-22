@@ -1,10 +1,11 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { IStudent } from '../types/Student';
 import { api } from '../lib/axios';
 
 interface AuthContextData {
 	user: IStudent | null;
 	isAuthenticated: boolean;
+	logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -28,11 +29,20 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		checkAuthentication();
 	}, []);
 
+	const logout = async () => {
+		await api.get('students/logout');
+		setUser(null);
+	};
+
 	return (
-		<AuthContext.Provider value={{ user, isAuthenticated }}>
+		<AuthContext.Provider value={{ user, isAuthenticated, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);
 };
 
-export { AuthContext, AuthProvider };
+const useAuth = () => {
+	return useContext(AuthContext);
+};
+
+export { AuthContext, AuthProvider, useAuth };

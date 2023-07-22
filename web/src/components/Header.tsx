@@ -5,7 +5,16 @@ import logo from '../../public/logo.png';
 import { AuthContext } from '../context/AuthContext';
 
 const Header = () => {
-	const { user, isAuthenticated } = useContext(AuthContext);
+	const { user, logout, isAuthenticated } = useContext(AuthContext);
+
+	const handleLogout = () => {
+		try {
+			logout();
+			window.location.reload();
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<header className="h-24 w-full sm:w-3/4 mx-auto flex justify-between sm:grid sm:grid-cols-3 items-center text-white text-sm sm:text-base font-sans font-medium gap-14 px-6 sm:px-0">
@@ -33,9 +42,14 @@ const Header = () => {
 					</Link>
 				</ul>
 				{isAuthenticated ? (
-					<pre className="capitalize font-sans">
-						{user?.name} - {user?.course.unit.name}
-					</pre>
+					<div className="flex divide-x">
+						<pre className=" font-sans capitalize mr-2">
+							{user?.name} 
+						</pre>
+						<button onClick={handleLogout} className="pl-2">
+							Deslogar
+						</button>
+					</div>
 				) : (
 					<Link to={'/login'}>
 						<p className="hover:underline text-center text-sm md:text-base">

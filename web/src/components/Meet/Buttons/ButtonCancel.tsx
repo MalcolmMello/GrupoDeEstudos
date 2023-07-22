@@ -7,6 +7,7 @@ const ButtonCancel = (meet: IMeet) => {
 		try {
 			await api.patch('meetings/cancel', { idMeeting: meet._id });
 			alert('Reunião apagada!');
+			window.location.reload();
 		} catch (error) {
 			console.log(error);
 		}
