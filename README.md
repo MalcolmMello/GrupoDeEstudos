@@ -4,6 +4,7 @@
 <h2>Sobre</h2>
 <p> Aplicação para criação e agendamento de grupos de estudos para alunos da Fatec e Etec. <br />
 </p>
+<p style="color: red; font-weight: bold;">***OBS: O projeto foi feito para fins de estudos, e atualmente está hospedado em um servidor gratuito e limitado da plataforma Render. Portanto, pode ser necessário uma espera de alguns minutos até que as requisições passem a ser respondidas em caso de uma inatividade muito longa.</p>
 
 ### Funcionalidades
 - [x] Login com uso de sessões otimizadas armazenadas utilizando Redis
